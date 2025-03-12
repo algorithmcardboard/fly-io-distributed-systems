@@ -1,4 +1,4 @@
-.PHONEY :install
+.PHONEY: install
 install:
 	go install .
 
@@ -11,5 +11,10 @@ MAELSTROM_DIR := ../maelstrom
 download-maelstrom:
 	curl -L -o $(MAELSTROM_ARCHIVE) $(MAELSTROM_URL)
 	mkdir -p $(MAELSTROM_DIR)
-	tar -xjf $(MAELSTROM_ARCHIVE) -C $(MAELSTROM_DIR)
+	tar --strip-components=1 -xjf $(MAELSTROM_ARCHIVE) -C $(MAELSTROM_DIR)
 	rm $(MAELSTROM_ARCHIVE)
+
+
+.PHONY: run
+run: install
+	../maelstrom/maelstrom test -w echo --bin ~/go/bin/maelstrom-echo --node-count 1 --time-limit 10
